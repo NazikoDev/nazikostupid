@@ -1,1 +1,1 @@
-path_db = 'db_p/items_db'
+path_db = "db_p/items.db"
