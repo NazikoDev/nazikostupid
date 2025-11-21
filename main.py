@@ -1,21 +1,21 @@
-from db_p.main_db import init_db, add_stuf, get_stufs, set_completed, delete_stuf
+from db_p.main_db import init_db, add_shop, get_shops, set_completed, delete_shop
 import flet as ft
 
 def main(page: ft.Page):
     page.title = "Список покупок"
     filter_type = "all"
-    stufs_column = ft.Column(spacing=5)
+    shops_column = ft.Column(spacing=5)
 
-    def load_stufs():
-        stufs_column.controls.clear()
-        for stuf_id, name, completed in get_stufs(filter_type):
+    def load_shops():
+        shops_column.controls.clear()
+        for stuf_id, name, completed in get_shops(filter_type):
             checkbox = ft.Checkbox(
                 label=name,
                 value=bool(completed),
                 on_change=lambda e, sid=stuf_id: toggle_completed(sid, e.control.value)
             )
-            delete_btn = ft.IconButton(icon=ft.Icons.DELETE, on_click=lambda e, sid=stuf_id: remove_stuf(sid))
-            stufs_column.controls.append(
+            delete_btn = ft.IconButton(icon=ft.Icons.DELETE, on_click=lambda e, sid=stuf_id: remove_shop(sid))
+            shops_column.controls.append(
                 ft.Row([checkbox, delete_btn], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
             )
         page.update()
@@ -23,17 +23,17 @@ def main(page: ft.Page):
     def add_item(e):
         text = input_stuf.value
         if text:
-            add_stuf(text)
+            add_shop(text)
             input_stuf.value = ""
-            load_stufs()
+            load_shops()
 
-    def remove_stuf(stuf_id):
-        delete_stuf(stuf_id)
-        load_stufs()
+    def remove_shop(shop_id):
+        delete_shop(shop_id)
+        load_shops()
 
-    def toggle_completed(stuf_id, value):
-        set_completed(stuf_id, int(value))
-        load_stufs()
+    def toggle_completed(shop_id, value):
+        set_completed(shop_id, int(value))
+        load_shops()
 
 
     def change_filter(e):
@@ -45,7 +45,7 @@ def main(page: ft.Page):
             filter_type = "completed"
         else:
             filter_type = "active"
-        load_stufs()
+        load_shops()
 
     input_stuf = ft.TextField(label="Добавить товар", expand=True, on_submit=add_item)
     button_add = ft.IconButton(icon=ft.Icons.ADD, on_click=add_item)
@@ -60,8 +60,8 @@ def main(page: ft.Page):
         ]
     )
 
-    page.add(ft.Row([input_stuf, button_add]), filter_tabs, stufs_column)
-    load_stufs()
+    page.add(ft.Row([input_stuf, button_add]), filter_tabs, shops_column)
+    load_shops()
 
 if __name__ == "__main__":
     init_db()
